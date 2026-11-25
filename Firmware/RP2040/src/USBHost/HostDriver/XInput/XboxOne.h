@@ -19,5 +19,6 @@ public:
 private:
     XboxOne::InReport prev_in_report_{};
     bool guide_pressed_{false};
+};
 
 #endif // _XBOX_ONE_HOST_H_
