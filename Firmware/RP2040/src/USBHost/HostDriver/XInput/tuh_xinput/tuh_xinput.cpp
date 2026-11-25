@@ -346,19 +346,16 @@ static bool xfer_cb(uint8_t dev_addr, uint8_t ep_addr, xfer_result_t result, uin
                         new_pad_data = true;
                         break;
                     case XboxOne::GIP_CMD_VIRTUAL_KEY:
-                        if (in_buffer[4] == 0x01 && !(in_buffer[4] & (1 << 1)))
+                        if (in_buffer[1] & XboxOne::GIP_OPT_ACK)
                         {
-                            in_buffer[4] |= (1 << 1);
-                            new_pad_data = true;
+                            const uint8_t ack[] = {
+                                XboxOne::GIP_CMD_ACK, XboxOne::GIP_OPT_INTERNAL, in_buffer[2], 0x09,
+                                0x00, XboxOne::GIP_CMD_VIRTUAL_KEY, XboxOne::GIP_OPT_INTERNAL, 0x02,
+                                0x00, 0x00, 0x00, 0x00, 0x00
+                            };
+                            send_report(dev_addr, instance, ack, sizeof(ack));
                         }
-                        else if (in_buffer[4] == 0x00 && (in_buffer[4] & (1 << 1))) 
-                        {
-                            in_buffer[4] &= ~(1 << 1);
-                            new_pad_data = true;
-                        }
-                        break;
-                    case XboxOne::GIP_CMD_ANNOUNCE:
-                        xboxone_init(interface, dev_addr, instance);
+                        new_pad_data = true;
                         break;
                 }
                 break;
