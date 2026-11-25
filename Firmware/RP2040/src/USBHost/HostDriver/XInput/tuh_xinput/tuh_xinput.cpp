@@ -519,8 +519,8 @@ bool set_rumble(uint8_t dev_addr, uint8_t instance, uint8_t rumble_l, uint8_t ru
             break;
         case DevType::XBOXONE:
             std::memcpy(buffer, XboxOne::RUMBLE, sizeof(XboxOne::RUMBLE));
-            buffer[8] = rumble_l / 2; // 0 - 128
-            buffer[9] = rumble_r / 2; // 0 - 128
+            buffer[8] = static_cast<uint8_t>((static_cast<uint16_t>(rumble_l) * 100) / 255);
+            buffer[9] = static_cast<uint8_t>((static_cast<uint16_t>(rumble_r) * 100) / 255);
             len = sizeof(XboxOne::RUMBLE);
             break;
         case DevType::XBOXOG:
