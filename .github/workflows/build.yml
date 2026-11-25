@@ -33,7 +33,9 @@ jobs:
         run: sudo apt install -y cmake gcc-arm-none-eabi libnewlib-arm-none-eabi libstdc++-arm-none-eabi-newlib
 
       - name: Get Pico SDK
-        run: git clone --branch 2.1.0 --recurse-submodules https://github.com/raspberrypi/pico-sdk.git
+        run: |
+          git clone --branch 2.1.0 --recurse-submodules https://github.com/raspberrypi/pico-sdk.git
+          sed -i '1i #include <cstdint>' pico-sdk/tools/pioasm/output_format.h
 
       - name: Create Build and Output Folders
         run: mkdir -p build output
