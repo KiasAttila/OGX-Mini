@@ -143,8 +143,8 @@ static void xboxone_init(Interface *interface, uint8_t dev_addr, uint8_t instanc
         wait_for_tx_complete(dev_addr, interface->ep_out);
     }
 
-    //Required for PDP aftermarket controllers
-    if (VID == 0x0e6f)
+    //Required for PDP & Hyperkin aftermarket controllers
+    if (VID == 0x0e6f || VID == 0x2e24)
     {
         send_report(dev_addr, instance, XboxOne::PDP_LED_ON, sizeof(XboxOne::PDP_LED_ON));
         wait_for_tx_complete(dev_addr, interface->ep_out);
