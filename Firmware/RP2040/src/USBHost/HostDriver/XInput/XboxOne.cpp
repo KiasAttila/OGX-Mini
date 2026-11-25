@@ -3,6 +3,7 @@
 #include "host/usbh.h"
 
 #include "USBHost/HostDriver/XInput/tuh_xinput/tuh_xinput.h"
+#include "USBHost/HostDriver/XInput/tuh_xinput/tuh_xinput_cmd.h"
 #include "USBHost/HostDriver/XInput/XboxOne.h"
 
 void XboxOneHost::initialize(Gamepad& gamepad, uint8_t address, uint8_t instance, const uint8_t* report_desc, uint16_t desc_len)
@@ -12,11 +13,32 @@ void XboxOneHost::initialize(Gamepad& gamepad, uint8_t address, uint8_t instance
 
 void XboxOneHost::process_report(Gamepad& gamepad, uint8_t address, uint8_t instance, const uint8_t* report, uint16_t len)
 {
-    const XboxOne::InReport* in_report = reinterpret_cast<const XboxOne::InReport*>(report);
-    if (std::memcmp(&prev_in_report_ + 4, in_report + 4, 14) == 0)
+    const XboxOne::InReport* in_report = nullptr;
+
+    if (report[0] == tuh_xinput::XboxOne::GIP_CMD_VIRTUAL_KEY)
     {
-        tuh_xinput::receive_report(address, instance);
-        return;
+        if (len < 5)
+        {
+            tuh_xinput::receive_report(address, instance);
+            return;
+        }
+        guide_pressed_ = (report[4] & 0x01) != 0;
+        in_report = &prev_in_report_;
+    }
+    else
+    {
+        if (len < 18)
+        {
+            tuh_xinput::receive_report(address, instance);
+            return;
+        }
+        if (std::memcmp(reinterpret_cast<const uint8_t*>(&prev_in_report_) + 4, report + 4, 14) == 0)
+        {
+            tuh_xinput::receive_report(address, instance);
+            return;
+        }
+        std::memcpy(&prev_in_report_, report, 18);
+        in_report = &prev_in_report_;
     }
 
     Gamepad::PadIn gp_in;
@@ -33,7 +55,7 @@ void XboxOneHost::process_report(Gamepad& gamepad, uint8_t address, uint8_t inst
     if (in_report->buttons[0] & XboxOne::Buttons0::BACK)  gp_in.buttons |= gamepad.MAP_BUTTON_BACK;
     if (in_report->buttons[0] & XboxOne::Buttons0::START) gp_in.buttons |= gamepad.MAP_BUTTON_START;
     if (in_report->buttons[0] & XboxOne::Buttons0::SYNC)  gp_in.buttons |= gamepad.MAP_BUTTON_MISC;
-    if (in_report->buttons[0] & XboxOne::Buttons0::GUIDE) gp_in.buttons |= gamepad.MAP_BUTTON_SYS;
+    if (guide_pressed_ || (in_report->buttons[0] & XboxOne::Buttons0::GUIDE)) gp_in.buttons |= gamepad.MAP_BUTTON_SYS;
     if (in_report->buttons[0] & XboxOne::Buttons0::A)     gp_in.buttons |= gamepad.MAP_BUTTON_A;
     if (in_report->buttons[0] & XboxOne::Buttons0::B)     gp_in.buttons |= gamepad.MAP_BUTTON_B;
     if (in_report->buttons[0] & XboxOne::Buttons0::X)     gp_in.buttons |= gamepad.MAP_BUTTON_X;
@@ -48,7 +70,6 @@ void XboxOneHost::process_report(Gamepad& gamepad, uint8_t address, uint8_t inst
     gamepad.set_pad_in(gp_in);
 
     tuh_xinput::receive_report(address, instance);
-    std::memcpy(&prev_in_report_, in_report, 18);
 }
 
 bool XboxOneHost::send_feedback(Gamepad& gamepad, uint8_t address, uint8_t instance)
