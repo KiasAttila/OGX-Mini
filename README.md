@@ -53,24 +53,6 @@ After a new mode is stored, the RP2040 will reset itself so you don't need to un
 
 Note: There are some third party controllers that can change their VID/PID, these might not work correctly.
 
-### Wireless adapters
-- Xbox 360 PC adapter (Microsoft or clones)
-- 8Bitdo v1 and v2 Bluetooth adapters (set to XInput mode)
-- Most wireless adapters that present themselves as Switch/XInput/PlayStation controllers should work
-
-### Wireless Bluetooth controllers (Pico W & ESP32)
-**Note:** Bluetooth functionality is in early testing, some may have quirks.
-- Xbox Series, One, and Elite 2
-- Dualshock 3
-- Dualshock 4
-- Dualsense
-- Switch Pro
-- Steam
-- Stadia
-- And more
-
-Please visit [**this page**](https://bluepad32.readthedocs.io/en/latest/supported_gamepads/) for a more comprehensive list of supported controllers and Bluetooth pairing instructions.
-
 ## Features new to v1.0.0
 - Bluetooth functionality for the Pico W, Pico 2 W, and Pico+ESP32.
 - Web application (connectable via USB or Bluetooth) for configuring deadzones and buttons mappings, supports up to 8 saved profiles.
@@ -100,12 +82,6 @@ Please visit [**this page**](https://bluepad32.readthedocs.io/en/latest/supporte
 ## Hardware
 For Pi Pico, please see the hardware folder for diagrams.
 
-I've designed a PCB for the RP2040-Zero so you can make a small form-factor adapter yourself. The gerber files, schematic, and BOM are in Hardware folder.
-
-<img src="images/OGX-Mini-rpzero-int.jpg" alt="OGX-Mini Boards" width="400">
-
-If you would like a prebuilt unit, you can purchase one, with cable and Xbox adapter included, from my [**Etsy store**](https://www.etsy.com/listing/1426992904/ogx-mini-controller-adapter-for-original).
-
 ## Adding supported controllers
 If your third party controller isn't working, but the original version is listed above, send me the device's VID and PID and I'll add it so it's recognized properly.
 
@@ -126,9 +102,6 @@ cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DOGXM_BOARD=PI_PICOW -D
 cmake --build build
 ```
 Or just install the GCC ARM toolchain and use the CMake Tools extension in VSCode.
-
-### ESP32
-Please see the Hardware directory for a diagram showing how to hookup the ESP32 to your RP2040.
 
 You will need ESP-IDF v5.1, esptool, python3, and git installed. If you use VSCode, you can install the ESP-IDF extension and configure the project for ESP-IDF v5.1, it'll download everything for you and then you just click the build button at the bottom of the window.
 
