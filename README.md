@@ -1,7 +1,7 @@
 # OGX-Mini
 ![OGX-Mini Boards](images/OGX-Mini-github.jpg "OGX-Mini Boards")
 
-Firmware for the RP2040, capable of emulating gamepads for several game consoles. The firmware comes in many flavors, supported on the [Adafruit Feather USB Host board](https://www.adafruit.com/product/5723), Pi Pico, Pi Pico 2, Pi Pico W, Pi Pico 2 W, Waveshare RP2040-Zero, Pico/ESP32 hybrid, and a 4-Channel RP2040-Zero setup.
+Firmware for the RP2040, capable of emulating gamepads for several game consoles. The firmware is supported on the Pi Pico.
 
 [**Visit the web app here**](https://wiredopposite.github.io/OGX-Mini-WebApp/) to change your mappings and deadzone settings. To pair the OGX-Mini with the web app via USB, plug your controller in, then connect it to your PC, hold **Start + Left Bumper + Right Bumper** to enter web app mode. Click "Connect via USB" in the web app and select the OGX-Mini. You can also pair via Bluetooth, no extra steps are needed in that case. 
 
@@ -98,7 +98,7 @@ Please visit [**this page**](https://bluepad32.readthedocs.io/en/latest/supporte
 - Rumble settings (intensity, enabled/disable, etc.)
 
 ## Hardware
-For Pi Pico, RP2040-Zero, 4 channel, and ESP32 configurations, please see the hardware folder for diagrams.
+For Pi Pico, please see the hardware folder for diagrams.
 
 I've designed a PCB for the RP2040-Zero so you can make a small form-factor adapter yourself. The gerber files, schematic, and BOM are in Hardware folder.
 
@@ -115,14 +115,6 @@ You can compile this for different boards with the CMake argument ```OGXM_BOARD`
 
 The options are:
 - ```PI_PICO``` 
-- ```PI_PICO2``` 
-- ```PI_PICOW``` 
-- ```PI_PICO2W``` 
-- ```RP2040_ZERO``` 
-- ```ADAFRUIT_FEATHER``` 
-- ```ESP32_BLUEPAD32_I2C```
-- ```ESP32_BLUERETRO_I2C``` 
-- ```EXTERNAL_4CH_I2C```
 
 You can also set ```MAX_GAMEPADS``` which, if greater than one, will only support DInput (PS3) and Switch.
 
